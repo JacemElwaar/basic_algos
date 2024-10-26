@@ -1,0 +1,31 @@
+https://www.youtube.com/watch?v=5NgNicANyqM&t=3387s  => harvard CS50 ia with python lecture on youtube 
+ 
+Example : 
+    BFS and DFS search algorthms are the kind of algorithms that make mistakes as exess of nodes explore, time consuming when the maze is big. So we want that our algorithms to be a little 
+    bit intelligent and manage to solve these issues 
+    - What does it mean by an intelligent algorithm: the way we can inform our algo how it solves his 
+    issues and manage to find the shorted way with the less effort 
+    => with this logic appears ways as uninformed search and informed search : 
+        - search strategy that uses no problem specific knowledge  
+        - search strategy that uses problem-specific knowledge to find solutions more efficiently 
+        (square closer is batter than one that can lend me further)
+
+    Types of informed search : 
+    - greedy best-first search : choses the node closest to the goal as hestimated by heristic 
+    function h(n). What is a heuristic look like : the function shoud define whitch position is better than the others. 
+    => the heuristic here we are going to use is named the manhatten distance => calculate the distance between two squares. => even the heuristic finds the solution 
+    PROBLEM => but always there is a problem with it is the number of nodes visited.
+
+    The solution for this is is to consider another parameter and add it ti the equation: 
+    
+    - A* search => search algorithm that expands node with lowest value of g(n)+h(n) 
+    in which 
+    g(n) = cost to reach node 
+    h(n) = estimated cost to goal 
+    So basically we are doing heuristic and also calculating the steps toward the goal.
+    and we are choosing the closest path basing on these two. 
+
+
+
+
+
