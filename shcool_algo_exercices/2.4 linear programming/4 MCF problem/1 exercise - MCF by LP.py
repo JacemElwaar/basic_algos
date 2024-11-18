@@ -1,39 +1,37 @@
-from pulp import *
+from pulp import LpProblem, LpMinimize, LpVariable, lpSum, LpStatus, PULP_CBC_CMD
 
 
 def main():
-
     # using a dictionary as the input data of the problem:
-
     data = {
-            "num_reqs": 3,
-            "ing_node": [0, 1, 2],  # ingress_nodes
-            "egr_node": [5, 4, 3],  # egress_nodes
-            "flow":     [6, 4, 2],  # commodity_flow
+        "num_reqs": 3,
+        "ing_node": [0, 1, 2],  # ingress_nodes
+        "egr_node": [5, 4, 3],  # egress_nodes
+        "flow": [6, 4, 2],  # commodity_flow
 
-            "num_ndes": 6,
-            "nde_to_nde":
-                [[0, 1, 1, 0, 0, 0],
-                 [0, 0, 0, 1, 1, 0],
-                 [0, 0, 0, 1, 1, 0],
-                 [0, 0, 0, 0, 1, 1],
-                 [0, 0, 0, 0, 0, 1],
-                 [0, 0, 0, 0, 0, 0]],
-            "capacity":
-                [[0, 8, 6, 0, 0, 0],
-                 [0, 0, 0, 6, 1, 0],
-                 [0, 0, 0, 3, 4, 0],
-                 [0, 0, 0, 0, 6, 4],
-                 [0, 0, 0, 0, 0, 6],
-                 [0, 0, 0, 0, 0, 0]],
-            "cost":
-                [[0, 3, 3, 0, 0, 0],
-                 [0, 0, 0, 3, 3, 0],
-                 [0, 0, 0, 3, 3, 0],
-                 [0, 0, 0, 0, 3, 3],
-                 [0, 0, 0, 0, 0, 3],
-                 [0, 0, 0, 0, 0, 0]],
-            }
+        "num_ndes": 6,
+        "nde_to_nde":
+            [[0, 1, 1, 0, 0, 0],
+             [0, 0, 0, 1, 1, 0],
+             [0, 0, 0, 1, 1, 0],
+             [0, 0, 0, 0, 1, 1],
+             [0, 0, 0, 0, 0, 1],
+             [0, 0, 0, 0, 0, 0]],
+        "capacity":
+            [[0, 8, 6, 0, 0, 0],
+             [0, 0, 0, 6, 1, 0],
+             [0, 0, 0, 3, 4, 0],
+             [0, 0, 0, 0, 6, 4],
+             [0, 0, 0, 0, 0, 6],
+             [0, 0, 0, 0, 0, 0]],
+        "cost":
+            [[0, 3, 3, 0, 0, 0],
+             [0, 0, 0, 3, 3, 0],
+             [0, 0, 0, 3, 3, 0],
+             [0, 0, 0, 0, 3, 3],
+             [0, 0, 0, 0, 0, 3],
+             [0, 0, 0, 0, 0, 0]],
+    }
 
     REQs = range(data["num_reqs"])
     NDEs = range(data["num_ndes"])
@@ -42,28 +40,60 @@ def main():
     problem = LpProblem("MCF_problem", LpMinimize)
 
     # variables of the LP problem: flow to be injected from each req through each link(u,v)
-    # because of the multiplicity of variables, we have to use a dictionary of "indexed" variables,
-    # instead of enumerating all variables as in all previous exercises.
     var_lnk_flow = LpVariable.dicts("flow_fit", (REQs, NDEs, NDEs), lowBound=0)
 
-    # utility function: minimize the cost of transmitting all flows through all links:
-    # TO BE COMPLETED
+    # Utility function: minimize the cost of transmitting all flows through all links:
+    problem += lpSum(
+        var_lnk_flow[req][node_u][node_v] * data["cost"][node_u][node_v]
+        for req in REQs
+        for node_u in NDEs
+        for node_v in NDEs
+        if data["nde_to_nde"][node_u][node_v]
+    )
 
-    # constraints:
+    # Constraints:
 
-    # for each link(u,v), all allocated flows must not exceed the link capacity:
-    # TO BE COMPLETED
+    # Capacity constraints: For each link(u,v), all allocated flows must not exceed the link capacity:
+    for node_u in NDEs:
+        for node_v in NDEs:
+            if data["nde_to_nde"][node_u][node_v]:
+                problem += lpSum(var_lnk_flow[req][node_u][node_v] for req in REQs) <= data["capacity"][node_u][node_v]
 
-    # for each req, for each node_u applies the flow conservation:
-    # TO BE COMPLETED
+    # Flow conservation constraints:
+    for req in REQs:
+        for node_u in NDEs:
+            if node_u == data["ing_node"][req]:  # Source node
+                problem += lpSum(
+                    var_lnk_flow[req][node_u][node_v] for node_v in NDEs if data["nde_to_nde"][node_u][node_v]
+                ) - lpSum(
+                    var_lnk_flow[req][node_v][node_u] for node_v in NDEs if data["nde_to_nde"][node_v][node_u]
+                ) == data["flow"][req]
+            elif node_u == data["egr_node"][req]:  # Sink node
+                problem += lpSum(
+                    var_lnk_flow[req][node_v][node_u] for node_v in NDEs if data["nde_to_nde"][node_v][node_u]
+                ) - lpSum(
+                    var_lnk_flow[req][node_u][node_v] for node_v in NDEs if data["nde_to_nde"][node_u][node_v]
+                ) == data["flow"][req]
+            else:  # Intermediate nodes
+                problem += lpSum(
+                    var_lnk_flow[req][node_u][node_v] for node_v in NDEs if data["nde_to_nde"][node_u][node_v]
+                ) - lpSum(
+                    var_lnk_flow[req][node_v][node_u] for node_v in NDEs if data["nde_to_nde"][node_v][node_u]
+                ) == 0
 
+    
     problem.solve(PULP_CBC_CMD(msg=False))
+
 
     # The status of the solution is printed to the screen
     print(f"Status: {LpStatus[problem.status]}\n")
 
     # print out the flow sent by each link(u,v) of all requests
-    print(f"MCF min cost: {problem.objective.value()}")
+    if problem.objective:
+        print(f"MCF min cost: {problem.objective.value()}")
+    else:
+        print(f"Problem status: {LpStatus[problem.status]} - No solution found.")
+
     for req in REQs:
         print(f"\nreq_{req}: ")
         for node_u in NDEs:
