@@ -1,0 +1,77 @@
+The document explains Dynamic Programming (DP) as a technique for solving combinatorial optimization problems. It highlights key elements, presents algorithms, and provides exercises to illustrate applications.
+
+### Overview of Dynamic Programming
+1. Key Features:
+   - Optimal Substructure: An optimal solution can be built using optimal solutions to sub-problems.
+   - Overlapping Sub-Problems: Problems can be recursively divided into smaller sub-problems.
+
+2. Principle of Optimality:
+   - Optimal decisions at each stage depend only on the state of the problem at that stage.
+
+3. Implementation:
+   - DP employs recursion combined with memoization to store and reuse solutions of sub-problems.
+
+### Algorithms and Example Problems
+#### 1. Shortest-Path Problem
+   - Description: Find the shortest path in a graph between two points.
+   - Approach: Use a recursive relationship to calculate the shortest path from node \(i\) to node \(j\).
+   - Problem: Given a graph with costs between nodes, determine the shortest path between specific nodes.
+
+#### 2. Knapsack Problem
+   - Description: Allocate items to maximize value without exceeding weight constraints.
+   - Approach: Solve recursively, storing results for each weight-capacity combination.
+   - Problem: Fill a 10-lb knapsack with items of specific weights and values.
+
+#### 3. Resource Allocation Problem
+   - Description: Allocate resources among activities to maximize overall revenue.
+   - Approach: Divide resources into stages, compute optimal allocation iteratively.
+   - Problem: Allocate 6 giga FLOPS among three activities to maximize revenue.
+
+#### 4. Cell Assignment Problem
+   - Description: Assign users to base stations to maximize connection quality while minimizing interference.
+   - Approach: Model as a multi-knapsack problem where each base station represents a knapsack.
+   - Problem: Assign end-users based on signal-to-interference ratio.
+
+#### 5. VM Placement Problem
+   - Description: Optimize placement of virtual machines (VMs) in a data center.
+   - Approach:
+     - Algorithms like First Fit, First Fit Decreasing, and Best Fit are used.
+     - Aim to minimize energy consumption or maximize placement efficiency.
+   - Problem: Solve a 3D multi-knapsack problem to allocate VMs to resources like CPU, RAM, and storage.
+
+#### 6. Service Function Chain (SFC) Allocation
+   - Description: Map Virtual Network Functions (VNFs) onto servers while minimizing resource use.
+   - Approach: Use DP or integer linear programming (ILP) to allocate VNFs optimally.
+   - Problem: Map VNFs of three SFC types onto edge and core servers.
+
+---
+
+### Exercises
+Here are examples you can try for each algorithm:
+1. Shortest-Path Problem:
+   - Graph: Nodes A, B, C, D; weights: A-B=4, A-C=2, B-D=3, C-D=5.
+   - Task: Find the shortest path from A to D.
+
+2. Knapsack Problem:
+   - Items: {Weight: 4, Value: 11}, {Weight: 3, Value: 7}, {Weight: 5, Value: 12}.
+   - Task: Maximize value for a 10-lb capacity knapsack.
+
+3. Resource Allocation:
+   - Resources: 6 FLOPS; Activities: A1, A2, A3; Revenues: r1, r2, r3 for demands d1, d2, d3.
+   - Task: Allocate FLOPS to maximize revenue.
+
+4. Cell Assignment:
+   - Users: U1, U2; Base Stations: BS1 (capacity: 10), BS2 (capacity: 15).
+   - Task: Assign users to stations for maximum throughput.
+
+5. VM Placement:
+   - VMs: {CPU: 2, RAM: 4}, {CPU: 3, RAM: 2}.
+   - Servers: {CPU: 6, RAM: 8}, {CPU: 4, RAM: 4}.
+   - Task: Place VMs to minimize active servers.
+
+6. SFC Allocation:
+   - SFC: VNF1 → VNF2 → VNF3.
+   - Servers: Edge (capacity: 10), Core (capacity: 20).
+   - Task: Allocate VNFs minimizing edge server usage.
+
+Let me know if you'd like step-by-step solutions or further explanations for any of these examples!
