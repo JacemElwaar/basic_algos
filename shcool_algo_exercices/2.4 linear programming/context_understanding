@@ -1,0 +1,89 @@
+Problem Setup
+Objective Function
+
+Maximize the profit:
+
+    Z = 40*x1 + 30*x2
+
+where:
+    x1 = Number of Product A produced. 
+    x2 = Number of Product B produced.
+    Profit per unit of Product A = $40.
+    Profit per unit of Product B = $30. 
+
+Constraints
+
+Machine Hours:
+Each unit of Product A requires 2 machine hours, and Product B requires 1 machine hour. 
+The company has a maximum of 100 machine hours:
+
+    2*x1 + x2 <= 100
+ 
+Labor Hours:
+Each unit of Product A requires 1 labor hour, and Product B requires 2 labor hours. 
+The company has a maximum of 80 labor hours:
+
+    x1 + 2*x2 <=80
+
+Non-negativity:
+The number of products cannot be negative:
+    x1 < 0 , x2 < 0
+
+
+steps in linear programming problems : 
+
+Stp1) 
+    maximize profitablity means maximize Z with: 
+    Z = 40*x1 + 30*x2
+    we have already these condition : 
+        2*x1 + x2 <= 100
+        x1 + 2*x2 <=80
+        x1 < 0 , x2 < 0 ==> whitch is a little bit domp here 
+    
+
+stp2) 
+    trying to solve it graphicaly :
+    where i have a solution of the system 
+        2*x1 + x2 = 100
+        x1 + 2*x2 =80 
+        => as i need to use all the ressources for a max gains 
+        try the solutions of the system and find out when Z maximizes.  
+    
+
+
+Mathematics Behind Linear Programming
+Linear Programming relies on these core mathematical concepts:
+
+1) Convexity:
+    The feasible region formed by linear constraints is a convex polytope.
+    The optimal solution always lies at a vertex (corner point) of the feasible region.
+        
+    => the set or the area of solutions that happen to respect all the constraint and resolves the problem. 
+
+
+2) Simplex Method:
+    A mathematical algorithm that starts from one vertex of the feasible region and moves along edges 
+    to adjacent vertices to improve the objective function until no further improvement is possible.
+    It efficiently avoids checking every vertex, focusing only on those that improve the solution.
+
+    find al the vertexes inside of the feasable ara and try them out until finaly we find the ideal solution.
+    add constants that
+
+
+3) Duality:
+    Every linear programming problem (primal) has a dual problem. The solution to the dual gives insights into the primal, and vice versa.
+    The dual variables often represent shadow prices, giving information on how much the objective would change if constraints were relaxed.
+
+4) Matrix Representation:
+    LP problems are expressed in matrix form for computational efficiency:
+    Maximize 
+    Z=c(T)x
+    Maximize Z=c(T)x
+    Subject to:
+    Ax ≤ b, x ≥ 0
+    Ax ≤ b, x ≥ 0
+    Where:
+        A: Coefficient matrix of constraints.
+        x: Decision variable vector.
+        b: Constraint bounds.
+        c: Coefficients of the objective function.
