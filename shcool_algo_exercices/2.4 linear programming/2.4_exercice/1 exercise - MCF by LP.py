@@ -36,13 +36,11 @@ def main():
     REQs = range(data["num_reqs"])
     NDEs = range(data["num_ndes"])
 
-    # min problem:
-    problem = LpProblem("MCF_problem", LpMinimize)
+    
+    problem = LpProblem("mc problem", LpMinimize)
+    
+    var_lnk_flow = LpVariable.dicts("Fit flow ", (REQs, NDEs, NDEs), lowBound=0)
 
-    # variables of the LP problem: flow to be injected from each req through each link(u,v)
-    var_lnk_flow = LpVariable.dicts("flow_fit", (REQs, NDEs, NDEs), lowBound=0)
-
-    # Utility function: minimize the cost of transmitting all flows through all links:
     problem += lpSum(
         var_lnk_flow[req][node_u][node_v] * data["cost"][node_u][node_v]
         for req in REQs
@@ -51,15 +49,12 @@ def main():
         if data["nde_to_nde"][node_u][node_v]
     )
 
-    # Constraints:
-
-    # Capacity constraints: For each link(u,v), all allocated flows must not exceed the link capacity:
+    
     for node_u in NDEs:
         for node_v in NDEs:
             if data["nde_to_nde"][node_u][node_v]:
                 problem += lpSum(var_lnk_flow[req][node_u][node_v] for req in REQs) <= data["capacity"][node_u][node_v]
 
-    # Flow conservation constraints:
     for req in REQs:
         for node_u in NDEs:
             if node_u == data["ing_node"][req]:  # Source node
@@ -90,9 +85,9 @@ def main():
 
     # print out the flow sent by each link(u,v) of all requests
     if problem.objective:
-        print(f"MCF min cost: {problem.objective.value()}")
+        print(f"mcf minmum  cost: {problem.objective.value()}")
     else:
-        print(f"Problem status: {LpStatus[problem.status]} - No solution found.")
+        print(f"problem status: {LpStatus[problem.status]} - there is no solution found.")
 
     for req in REQs:
         print(f"\nreq_{req}: ")

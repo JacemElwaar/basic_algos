@@ -40,7 +40,7 @@ def main():
     NDEs = range(data["num_ndes"])
 
     # 1. Define the problem
-    prob = LpProblem("MCF_LP_Path_Variables", LpMinimize)
+    prob = LpProblem("MCF LP Path Variables", LpMinimize)
 
     # 2. Define variables
     path_vars = {}
@@ -74,7 +74,7 @@ def main():
 
     # 7. Output results
     print(f"Status: {LpStatus[prob.status]}")
-    print(f"MCF min cost: {value(prob.objective)}")
+    print(f"mcf minimum cost: {value(prob.objective)}")
     for req in REQs:
         for p, path in enumerate(paths[req]):
             flow = path_vars[req, p].varValue
